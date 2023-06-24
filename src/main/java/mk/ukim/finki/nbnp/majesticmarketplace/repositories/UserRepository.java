@@ -7,7 +7,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
-    @Query("SELECT register_user('doe.john', 'pass', 'doe@example.com', 'Doe', 'John')")
-    String register(String username,String password,String email,String name,String surname);
+    @Query("SELECT register_user(:username,:password,:email,:name, :surname)")
+    void register(String username,String password,String email,String name,String surname);
 
+    @Query("SELECT user_login(:username,:password)")
+    void login(String username,String password);
+
+    
 }
