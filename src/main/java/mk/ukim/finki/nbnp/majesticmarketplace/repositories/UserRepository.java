@@ -2,16 +2,17 @@ package mk.ukim.finki.nbnp.majesticmarketplace.repositories;
 
 import mk.ukim.finki.nbnp.majesticmarketplace.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
-    @Query("SELECT register_user(:username,:password,:email,:name, :surname)")
-    void register(String username,String password,String email,String name,String surname);
+    @Procedure(name = "register_user")
+    void register(@Param("username") String username, @Param("password") String password, @Param("email") String email, @Param("name") String name, @Param("surname") String surname);
 
-    @Query("SELECT user_login(:username,:password)")
-    void login(String username,String password);
+    @Procedure(name = "login_user")
+    void login(@Param("username") String username,@Param("password") String password);
 
     
 }

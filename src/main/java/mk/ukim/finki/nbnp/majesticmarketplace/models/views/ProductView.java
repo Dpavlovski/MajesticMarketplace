@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
+import java.io.Serializable;
+
 /**
  * Mapping for DB view
  */

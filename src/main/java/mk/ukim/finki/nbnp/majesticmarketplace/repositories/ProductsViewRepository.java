@@ -1,6 +1,5 @@
 package mk.ukim.finki.nbnp.majesticmarketplace.repositories;
 
-import mk.ukim.finki.nbnp.majesticmarketplace.models.Product;
 import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ProductView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,28 +7,29 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
-public interface ProductsRepository extends JpaRepository<Product,Long> {
-    @Query(value = "SELECT * FROM show_products()",nativeQuery = true)
+public interface ProductsViewRepository extends JpaRepository<ProductView,Long> {
+    @Procedure(name = "show_products")
     List<ProductView> findAllProducts();
 
     @Query(value = "SELECT * FROM details_product(:productId)",nativeQuery = true)
-    Product details(Long productId);
+    ProductView details(@Param("productId") Long productId);
 
     @Query(value = "SELECT * FROM edit_product(:productId,:name,:description,:image,:categoryId)",nativeQuery = true)
     void edit(@Param("productId") Long productId, @Param("name") String name, @Param("description") String description, @Param("image") String image, @Param("categoryId") Long categoryId);
 
-    @Query(value = "SELECT * FROM add_product(:name,:description,:image,:categoryId)",nativeQuery = true)
-    void create(@Param("name") String name, @Param("description") String description, @Param("image") String image, @Param("categoryId") Long categoryId);
+   @Procedure(name = "add_product")
+    void create(@Param("name") String name, @Param("description") String description, @Param("image") String image, @Param("categoryId") Long categoryId, @Param("price") Float price, @Param("validFrom") Instant validFrom, @Param("validTill") Instant validTill);
     @Query(value = "SELECT * FROM delete_product(:productId)",nativeQuery = true)
     void delete(Long productId);
 
     @Query(value = "SELECT * FROM products_in_category(:categoryId)",nativeQuery = true)
-    List<Product> findAllInCategory(@Param("categoryId") Long categoryId);
+    List<ProductView> findAllInCategory(@Param("categoryId") Long categoryId);
     @Query(value = "SELECT * FROM products_in_price_range(:from,:to)",nativeQuery = true)
-    List<Product> findAllInPriceRange(@Param("from") int from,@Param("to") int to);
+    List<ProductView> findAllInPriceRange(@Param("from") int from,@Param("to") int to);
 
 
 }

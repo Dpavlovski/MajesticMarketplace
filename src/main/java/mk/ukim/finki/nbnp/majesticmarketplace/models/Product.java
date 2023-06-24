@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Entity
 @Table(name = "product")
-public class Product {
+public class Product  {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
@@ -22,7 +24,7 @@ public class Product {
     @Column(name = "image")
     private String image;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
