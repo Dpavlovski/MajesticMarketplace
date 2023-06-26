@@ -21,16 +21,16 @@ public class ProductService {
         return productsRepository.details(id);
     }
 
-    public void addProduct(String name, String description, String image, Long categoryId, Float price, Instant validFrom, Instant validTill){
-        productsRepository.create(name,description,image,categoryId,price,validFrom,validTill);
-    }
-
-    public void editProduct(Long id,String name,String description,String image,Long categoryId){
-        productsRepository.edit(id,name,description,image,categoryId);
-    }
-    public void deleteProduct(Long id){
-        productsRepository.delete(id);
-    }
+//    public void addProduct(String name, String description, String image, Long categoryId, Float price, Instant validFrom, Instant validTill){
+//        productsRepository.create(name,description,image,categoryId,price,validFrom,validTill);
+//    }
+//
+//    public void editProduct(Long id,String name,String description,String image,Long categoryId){
+//        productsRepository.edit(id,name,description,image,categoryId);
+//    }
+//    public void deleteProduct(Long id){
+//        productsRepository.delete(id);
+//    }
 
     public List<ProductView> filterByCategory(Long categoryId){
         return productsRepository.findAllInCategory(categoryId);
@@ -40,7 +40,4 @@ public class ProductService {
         return productsRepository.findAllInPriceRange(from,to);
     }
 
-    public List<ProductView> productViewList(){
-        return productsRepository.findAll();
-    }
 }

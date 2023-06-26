@@ -5,12 +5,14 @@ import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ShoppingCartByUserVie
 import mk.ukim.finki.nbnp.majesticmarketplace.repositories.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
 
-    public ShoppingCartByUserView getShoppingCartRepository() {
+    public List<ShoppingCartByUserView> findShoppingCartByUser() {
         return shoppingCartRepository.getShoppingCartByUser();
     }
 
@@ -18,3 +20,8 @@ public class ShoppingCartService {
         shoppingCartRepository.addShoppingCartItem(productId,quantity);
     }
 }
+
+
+
+
+
