@@ -8,6 +8,15 @@
   <div class="container mb-4">
     <div class="row">
       <div class="col-12" th:if="${items.size() > 0}">
+          <div class="row">
+              <div class="col-12">
+                  <form th:action="@{'/shopping-cart/place-order'}" th:method="POST">
+                      <button type="submit" class="btn btn-primary">
+                          Place Order
+                      </button>
+                  </form>
+              </div>
+          </div>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -33,15 +42,6 @@
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <form th:action="@{'/shopping-cart/place-order'}" th:method="POST">
-          <button type="submit" class="btn btn-primary">
-            Place Order
-          </button>
-        </form>
       </div>
     </div>
   </div>
