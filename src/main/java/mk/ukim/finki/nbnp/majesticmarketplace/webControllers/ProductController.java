@@ -42,13 +42,13 @@
 //}
 
 
-
 package mk.ukim.finki.nbnp.majesticmarketplace.webControllers;
 
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ProductView;
 import mk.ukim.finki.nbnp.majesticmarketplace.services.CategoryService;
 import mk.ukim.finki.nbnp.majesticmarketplace.services.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,11 +56,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Controller
 @AllArgsConstructor
-@RequestMapping("/products")
+@RequestMapping
 public class ProductController {
 
     private final ProductService productService;
@@ -68,25 +66,25 @@ public class ProductController {
 
     @GetMapping
     public String getProductPage(
-           @RequestParam (required = false) Long categoryId, @RequestParam (required = false) Integer from, @RequestParam (required = false) Integer to,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer results,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Integer from,
+            @RequestParam(required = false) Integer to,
             Model model) {
-        List<ProductView> productsList;
-        if(categoryId!=null)
-            productsList = this.productService.filterByCategory(categoryId);
-        else if(from != null && to != null)
-           productsList = this.productService.filterByPriceRange(from,to);
-        else productsList = this.productService.findAll();
-        model.addAttribute("products", productsList);
-        model.addAttribute("categories",categoryService.listAllCategories());
-        model.addAttribute("bodyContent", "products");
-        return "master-template";
+        Page<ProductView> products;
+        if (categoryId != null || from != null || to != null) {
+            products = this.productService.findFiltered(categoryId, from, to, pageNum, results);
+        } else products = this.productService.findAll(pageNum, results);
+        model.addAttribute("page", products);
+        model.addAttribute("categories", categoryService.listAllCategories());
+        return "products";
     }
 
     @GetMapping("/{id}")
-    public String details(@PathVariable Long id,Model model){
+    public String details(@PathVariable Long id, Model model) {
         model.addAttribute("products", productService.getDetails(id));
-        model.addAttribute("bodyContent", "products");
-        return "master-template";
+        return "products";
     }
 
 

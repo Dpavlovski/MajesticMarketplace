@@ -56,7 +56,7 @@ public class ShoppingCartController {
         List<ShoppingCartByUserView> shoppingCartItems = this.shoppingCartService.findShoppingCartByUser();
         model.addAttribute("items", shoppingCartItems.stream().distinct().collect(Collectors.toList()));
         model.addAttribute("bodyContent", "shopping-cart");
-        return "master-template";
+        return "layout";
     }
 
     @PostMapping("/add-product")

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category,Long> {
-    @Query(value = "SELECT * FROM show_categories()",nativeQuery = true)
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+    @Query(value = "SELECT * FROM show_categories()", nativeQuery = true)
     List<Category> listAll();
 }

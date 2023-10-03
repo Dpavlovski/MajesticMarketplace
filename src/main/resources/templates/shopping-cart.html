@@ -1,48 +1,52 @@
-<div xmlns:th="http://www.thymeleaf.org">
-  <section class="jumbotron text-center">
-    <div class="container">
-      <h3 class="jumbotron-heading">Shopping cart for user: </h3>
-    </div>
-  </section>
-
-  <div class="container mb-4">
-    <div class="row">
-      <div class="col-12" th:if="${items.size() > 0}">
-          <div class="row">
-              <div class="col-12">
-                  <form th:action="@{'/shopping-cart/place-order'}" th:method="POST">
-                      <button type="submit" class="btn btn-primary">
-                          Place Order
-                      </button>
-                  </form>
-              </div>
-          </div>
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-            <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Price</th>
-              <th>Quantity</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="i : ${items}" class="cart-item">
-              <td th:text="${i.getName()}"></td>
-              <td th:text="${i.getPrice()}"></td>
-              <td th:text="${i.getQuantity()}"></td>
-              <td><form>
-                  <button type="submit" class="btn btn-sm btn-danger">
-                    <i class="fa fa-trash"></i> Remove
-                  </button>
-              </form>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+<!DOCTYPE html>
+<html lang="mk" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>MajesticMarketplace</title>
+</head>
+<body>
+<div class="mt-4" layout:fragment="content">
+        <div class="row">
+            <div class="col-12" th:if="${items.size() > 0}">
+                <div class="row">
+                    <div class="col-12">
+                        <form th:action="@{'/shopping-cart/place-order'}" th:method="POST">
+                            <button type="submit" class="btn btn-primary">
+                                Place Order
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Price</th>
+                            <th>Quantity</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="i : ${items}" class="cart-item">
+                            <td th:text="${i.getName()}"></td>
+                            <td th:text="${i.getPrice()}"></td>
+                            <td th:text="${i.getQuantity()}"></td>
+                            <td>
+                                <form>
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i> Remove
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
+    <div th:include="fragments/paging :: pageSection(${page})"></div>
 </div>
+</body>
+</html>
