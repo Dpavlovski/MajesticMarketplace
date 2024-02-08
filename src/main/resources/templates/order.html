@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="mk" layout:decorate="~{layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>MajesticMarketplace</title>
+</head>
+<body>
+
+<div class="mt-4" layout:fragment="content">
+
+    <form action="/order/pay" method="POST">
+        <script src="//checkout.stripe.com/v2/checkout.js"
+                class="stripe-button"
+                th:data-key="${publicKey}"
+                data-locale="auto"
+                data-description="Order Payment"
+                th:data-amount="${orderItems.get(0).totalCost * 100}"
+                data-label="Pay now">
+        </script>
+        <input type="hidden" name="amount" th:value="${orderItems.get(0).totalCost * 100}">
+        <input type="hidden" name="id" value="@item.Id">
+    </form>
+    <div class="row">
+        <div class="col-12" th:if="${orderItems.size() > 0}">
+            <div class="row">
+                <div class="col-12">
+                    <form th:action="@{'/shopping-cart/pay_now'}" th:method="POST">
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th>Quantity</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="i : ${orderItems}" class="cart-item">
+                        <td th:text="${i.getName()}"></td>
+<!--                        <td th:text="${i.getPrice()}"></td>-->
+<!--                        <td th:text="${i.getQuantity()}"></td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div>
+        <label th:text="'User: ' + ${orderItems.get(0).getUsername()}"></label>
+    </div>
+    <div>
+        <label th:text="'Total cost: ' + ${orderItems.get(0).getTotalCost()}"></label>
+    </div>
+
+</div>
+</body>
+</html>

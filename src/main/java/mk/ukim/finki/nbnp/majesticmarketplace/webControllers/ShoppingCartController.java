@@ -1,36 +1,3 @@
-//package mk.ukim.finki.nbnp.majesticmarketplace.webControllers;
-//
-//import lombok.AllArgsConstructor;
-//import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ShoppingCartByUserView;
-//import mk.ukim.finki.nbnp.majesticmarketplace.services.ShoppingCartService;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//@AllArgsConstructor
-//@RequestMapping("/api/shopping-cart")
-//public class ShoppingCartController {
-//
-//    private final ShoppingCartService shoppingCartService;
-//
-//    @GetMapping
-//    public ResponseEntity<?> listShoppingCartItems() {
-//        List<ShoppingCartByUserView> shoppingCart = this.shoppingCartService.findShoppingCartByUser();
-//        return ResponseEntity.ok(shoppingCart);
-//    }
-//
-//    @PostMapping("/add-product")
-//    public ResponseEntity<?> addProductToShoppingCart(@RequestParam Long productId,@RequestParam Short quantity) {
-//        this.shoppingCartService.add_shoppingCartItem(productId,quantity);
-//        return ResponseEntity.ok("Product added to shopping cart successfully.");
-//    }
-//}
-//
-
-
-
 package mk.ukim.finki.nbnp.majesticmarketplace.webControllers;
 
 
@@ -53,16 +20,22 @@ public class ShoppingCartController {
 
     @GetMapping
     public String getShoppingCartPage(Model model) {
-        List<ShoppingCartByUserView> shoppingCartItems = this.shoppingCartService.findShoppingCartByUser();
-        model.addAttribute("items", shoppingCartItems.stream().distinct().collect(Collectors.toList()));
-        model.addAttribute("bodyContent", "shopping-cart");
-        return "layout";
+        List<ShoppingCartByUserView> shoppingCartItems = shoppingCartService.findShoppingCartByUser();
+        model.addAttribute("items", shoppingCartItems);
+        return "shopping-cart";
     }
 
-    @PostMapping("/add-product")
-    public String addProductToShoppingCart(@RequestParam Long id,@RequestParam Short quantity) {
-        this.shoppingCartService.add_shoppingCartItem(id,quantity);
+    @PostMapping("/add-product/{id}")
+    public String addProductToShoppingCart(@PathVariable Long id, @RequestParam Short quantity) {
+        shoppingCartService.add_shoppingCartItem(id, quantity);
+        return "redirect:/";
+    }
+
+    @PostMapping("/delete-product")
+    public String deleteProductFromShoppingCart(@RequestParam Long productId) {
+        shoppingCartService.delete_shoppingCartItem(productId);
         return "redirect:/shopping-cart";
     }
+
 }
 

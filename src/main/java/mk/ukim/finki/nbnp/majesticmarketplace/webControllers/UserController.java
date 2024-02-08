@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+
     @PostMapping("/register")
-    public void register(@RequestParam String username, @RequestParam String password, @RequestParam String email, @RequestParam String name, @RequestParam String surname){
-        userService.register(username,password,email,name,surname);
+    public void register(@RequestParam String username, @RequestParam String password, @RequestParam String email, @RequestParam String name, @RequestParam String surname) {
+        userService.register(username, password, email, name, surname);
     }
 
 

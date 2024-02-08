@@ -2,66 +2,67 @@
 <html lang="mk" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
+
 <head>
-    <title>MajesticMarketplace</title>
+    <meta charset="UTF-8">
+    <title></title>
 </head>
 <body>
 <div class="mt-4" layout:fragment="content">
     <h3 class="jumbotron-heading">All products</h3>
     <div class="row">
-        <div class="col-12" th:if="${page.totalElements > 0}">
-            <!-- Filter options -->
+        <div class="col-12" th:if="${page.size> 0}">
             <form class="mb-3" th:action="@{/}" method="get">
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="category">Filter by Category:</label>
                         <select class="form-control" id="category" name="categoryId">
                             <option value="">All Categories</option>
-                            <!-- Populate category options -->
-                            <option th:each="category : ${categories}" th:value="${category.id}"
+                            <option th:selected="${category.id == categoryId}"
+                                    th:each="category : ${categories}" th:value="${category.id}"
                                     th:text="${category.name}"></option>
                         </select>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="minPrice">Min Price:</label>
-                        <input type="number" class="form-control" id="minPrice" name="from">
+                        <input type="number" class="form-control" id="minPrice" name="from" th:value="${from}">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="maxPrice">Max Price:</label>
-                        <input type="number" class="form-control" id="maxPrice" name="to">
+                        <input type="number" class="form-control" id="maxPrice" name="to" th:value="${to}">
                     </div>
                 </div>
+                <a href="/" class="btn btn-secondary">Clear filters</a>
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
 
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Product Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Description</th>
-                        <th scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="product : ${page}" class="product">
-                        <td th:text="${product.getName()}"></td>
-                        <td th:text="${product.getPrice()}"></td>
-                        <td th:text="${product.getDescription()}"></td>
-                        <td>
-                            <form th:action="@{'/shopping-cart/add-product/{id}' (id=${product.getId()})}"
-                                  th:method="POST">
-                                <button type="submit" class="btn btn-sm btn-primary cart-product">
-                                    <i class="fa fa-cart-plus"></i> Add to Cart
-                                </button>
-                            </form>
-                            <a th:href="@{'/products/{id}' (id=${product.getId()})}"
-                               class="btn btn-sm btn-info">Details</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="container">
+                <div class="row">
+                    <div th:each="product : ${page}" class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/-Insert_image_here-.svg/800px--Insert_image_here-.svg.png"
+                                 class="card-img-top" alt="Product Image">
+
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${product.getName()}"></h5>
+                                <p class="card-text" th:text="${product.getDescription()}"></p>
+                                <p class="card-text e">Price: $<span th:text="${product.getPrice()}" ></span>
+                                </p>
+                            </div>
+
+                            <div class="card-footer">
+                                <form th:action="@{'/shopping-cart/add-product/{id}' (id=${product.id})}" th:method="POST">
+                                    <div class="form-group">
+                                        <label for="quantity">Quantity:</label>
+                                        <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block">Add to Cart</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

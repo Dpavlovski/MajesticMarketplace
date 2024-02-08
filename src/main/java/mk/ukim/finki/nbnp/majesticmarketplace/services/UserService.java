@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    public void register(String username,String password,String email,String name,String surname){
-        userRepository.register(username,password,email,name,surname);
+    public void register(String username, String password, String email, String name, String surname) {
+        userRepository.register(username, password, email, name, surname);
     }
-
 }

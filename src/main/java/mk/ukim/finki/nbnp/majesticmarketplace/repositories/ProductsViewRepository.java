@@ -2,6 +2,7 @@ package mk.ukim.finki.nbnp.majesticmarketplace.repositories;
 
 import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ProductView;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import java.util.List;
 @Repository
 public interface ProductsViewRepository extends JpaRepository<ProductView, Long> {
     @Query(value = "SELECT * FROM show_products()", nativeQuery = true)
-    Page<ProductView> findAll(Pageable pageable);
+    Page<ProductView> findAllWithPagination(Pageable pageable);
 
     @Query("SELECT p FROM ProductView p  " +
             "WHERE (:categoryId IS NULL OR p.categoryId = :categoryId) " +
@@ -25,6 +26,7 @@ public interface ProductsViewRepository extends JpaRepository<ProductView, Long>
             @Param("to") Integer to,
             Pageable pageable
     );
+
     @Query(value = "SELECT * FROM details_product(:productId)", nativeQuery = true)
     ProductView details(@Param("productId") Long productId);
 
@@ -42,5 +44,7 @@ public interface ProductsViewRepository extends JpaRepository<ProductView, Long>
     @Query(value = "SELECT * FROM products_in_price_range(:from,:to)", nativeQuery = true)
     List<ProductView> findAllInPriceRange(@Param("from") int from, @Param("to") int to);
 
+    @Query(value = "SELECT * FROM search_products(:word)", nativeQuery = true)
+    Page<ProductView> searchProducts(@Param("word") String word, Pageable pageable);
 
 }

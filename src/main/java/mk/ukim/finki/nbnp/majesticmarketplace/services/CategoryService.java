@@ -12,7 +12,7 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public List<Category> listAllCategories(){
+    public List<Category> listAllCategories() {
         return categoryRepository.listAll();
     }
 }

@@ -1,60 +1,17 @@
-//package mk.ukim.finki.nbnp.majesticmarketplace.webControllers;
-//
-//import lombok.AllArgsConstructor;
-//import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ProductView;
-//import mk.ukim.finki.nbnp.majesticmarketplace.services.ProductService;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.time.Instant;
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/api/products")
-//@AllArgsConstructor
-//public class ProductController {
-//    private final ProductService productService;
-//    @GetMapping()
-//    public List<ProductView> productList(){
-//        return productService.findAll();
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ProductView details(@PathVariable Long id){
-//        return productService.getDetails(id);
-//    }
-//
-//
-//    @PutMapping("/edit")
-//    public void edit(@RequestParam Long id, @RequestParam String name,@RequestParam String description,@RequestParam String image, @RequestParam Long categoryId){
-//       productService.editProduct(id,name,description,image,categoryId);
-//    }
-//
-//
-//    @PostMapping("/add")
-//    public void save(@RequestParam String name, @RequestParam String description, @RequestParam String image, @RequestParam Long categoryId, @RequestParam Float price, @RequestParam Instant validFrom, @RequestParam Instant validTill){
-//        productService.addProduct(name,description,image,categoryId,price,validFrom,validTill);
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    public void delete(@PathVariable Long id){
-//        productService.deleteProduct(id);
-//    }
-//}
-
-
 package mk.ukim.finki.nbnp.majesticmarketplace.webControllers;
 
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ProductView;
 import mk.ukim.finki.nbnp.majesticmarketplace.services.CategoryService;
 import mk.ukim.finki.nbnp.majesticmarketplace.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
+
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -66,18 +23,28 @@ public class ProductController {
 
     @GetMapping
     public String getProductPage(
-            @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer results,
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int results,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Integer from,
             @RequestParam(required = false) Integer to,
+            @RequestParam(required = false) String word,
             Model model) {
         Page<ProductView> products;
         if (categoryId != null || from != null || to != null) {
             products = this.productService.findFiltered(categoryId, from, to, pageNum, results);
-        } else products = this.productService.findAll(pageNum, results);
+
+        } else if (!StringUtils.isEmpty(word)) {
+            products = productService.searchProducts(word, pageNum, results);
+        } else products = this.productService.findAllWithPagination(pageNum, results);
         model.addAttribute("page", products);
+//        model.addAttribute("pageNum", pageNum);
+//        model.addAttribute("results", results);
+//        model.addAttribute("totalPages", calculateTotalPages(results));
         model.addAttribute("categories", categoryService.listAllCategories());
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("from", from);
+        model.addAttribute("to", to);
         return "products";
     }
 
@@ -87,5 +54,9 @@ public class ProductController {
         return "products";
     }
 
+
+    private int calculateTotalPages(int pageSize) {
+        return (int) Math.ceil((double) productService.findAll().size() / pageSize);
+    }
 
 }

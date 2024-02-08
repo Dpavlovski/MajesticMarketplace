@@ -1,19 +1,20 @@
 package mk.ukim.finki.nbnp.majesticmarketplace.repositories;
 
-import mk.ukim.finki.nbnp.majesticmarketplace.models.views.ShoppingCartByUserView;
+import jakarta.transaction.Transactional;
+import mk.ukim.finki.nbnp.majesticmarketplace.models.Shoppingcart;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
+public interface ShoppingCartRepository extends JpaRepository<Shoppingcart, Long> {
+    @Modifying
+    @Transactional
+    @Query(value = "CALL add_product_to_cart(:cart_id, :product_id, :quantity)", nativeQuery = true)
+    void addShoppingCartItem(@Param("cart_id") Long cart_id, @Param("product_id") Long product_id, @Param("quantity") Short quantity);
 
-@Repository
-public interface ShoppingCartRepository extends JpaRepository<ShoppingCartByUserView, Long> {
-
-    @Query(value = "SELECT * FROM user_shopping_cart_items()", nativeQuery = true)
-    List<ShoppingCartByUserView> getShoppingCartByUser();
-
-    @Query(value = "SELECT * FROM add_product_to_cart(:productId,:quantity)", nativeQuery = true)
-    void addShoppingCartItem(@Param("productId") Long productId, @Param("quantity") Short quantity);
+    @Modifying
+    @Transactional
+    @Query(value = "CALL delete_shopping_cart_item(:product_id)", nativeQuery = true)
+    void deleteShoppingCartItem(@Param("product_id") Long product_id);
 }

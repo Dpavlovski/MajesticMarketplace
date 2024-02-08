@@ -14,12 +14,16 @@ import java.util.List;
 public class ProductService {
     private final ProductsViewRepository productsRepository;
 
-    public Page<ProductView> findAll(Integer pageNum, Integer results) {
-        return productsRepository.findAll(PageRequest.of(pageNum, results));
+    public Page<ProductView> findAllWithPagination(int pageNum, int pageSize) {
+        return productsRepository.findAllWithPagination(PageRequest.of(pageNum, pageSize));
+    }
+
+    public List<ProductView> findAll() {
+        return productsRepository.findAll();
     }
 
     public Page<ProductView> findFiltered(Long categoryId, Integer from, Integer to, Integer pageNum, Integer results) {
-        return productsRepository.findFiltered(categoryId, from, to, PageRequest.of(pageNum, results));
+        return productsRepository.findFiltered(categoryId, from, to, PageRequest.of(pageNum - 1, results));
     }
 
     public ProductView getDetails(Long id) {
@@ -33,6 +37,9 @@ public class ProductService {
 
     public List<ProductView> filterByPriceRange(int from, int to) {
         return productsRepository.findAllInPriceRange(from, to);
+    }
+    public Page<ProductView> searchProducts(String word, int pageNum, int results) {
+        return productsRepository.searchProducts(word, PageRequest.of(pageNum, results));
     }
 
 }
